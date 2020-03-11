@@ -119,6 +119,7 @@ predict_proba(test_m)
 acc_nn <- mean(round(predictions_nn[, 2]) == y_test)
 auc_nn = auc(y_test, predictions_nn[, 2])
 
+
 model_data <- data.frame(Model_name = c("Logistic Regression", "Support Vector Machine", "Extreme Gradient Boosting", "Keras Neural Network"),
 model_acc = c(acc_glm, acc_svm, acc_xgb, acc_nn),
 model_auc = c(auc_glm, auc_svm, auc_xgb, auc_nn))
