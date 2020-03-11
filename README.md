@@ -11,3 +11,5 @@ It contains a single .Rmd, and a single .R file which have the following code:
 * Feature importance for the best model.
 * Data frames containing the accuracy and the area under the curve for each model.
 
+## Running the Code
+
