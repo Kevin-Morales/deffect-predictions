@@ -3,4 +3,4 @@
  
 library(rmarkdown)
 
-render("final-draft.Rmd")
+render("final-draft.Rmd", c("html_document", "pdf_document"))
