@@ -3,3 +3,6 @@
 # Ignore CSV files.
 *.csv
 
+# Ignore any output directories.
+/final-draft_cache/*
+/final-draft_files/*

@@ -1,12 +1,12 @@
 ---
-title: "Software Deffect Prediction Using Supervised Models"
+title: "Predictive Models for Software Deffects Using Supervised Learning"
 author: "Kevin Morales"
 date: "`r Sys.Date()`"
 ---
 
 
-```{r setup, include=FALSE, fig.width = 6.5, fig.height = 6.5}
-knitr::opts_chunk$set(cache=TRUE)
+```{r setup, include=FALSE, cache = TRUE}
+knitr::opts_chunk$set(cache=TRUE, fig.height = 7, fig.width = 7)
 library(e1071)
 library(keras)
 library(pROC)
@@ -60,16 +60,18 @@ y_test <- x_test$has_bugs
 
 # Introduction{-}
 
+(*NOTE*: The accompanying source code can be found inside the following repository web address: [Software Deffect Predictions Source](https://github.com/Kevin-Morales/deffect-predictions) )
+
 The software development industry is lately being guided by innovative capabilities possible due to predictive modeling and machine learning.
 Integrated development environments are no exception. Microsoft, for example, can offer users a better auto completion experience by training a machine learning model using Git Hub repositories as its data set.
-(See the following documentation page: (Visual Studio IntelliCode)[https://visualstudio.microsoft.com/services/intellicode/])
+(See the following documentation page: [Visual Studio IntelliCode](https://visualstudio.microsoft.com/services/intellicode/))
 However, research is also being conducted concerning the prediction of software deffects.
 The idea entails finding a relevant data set (i.e., computing source code metrics, type checking, ETC.), finding features that directly correlate to the number of deffects, and feeding them to a certain predictive or machine learning object model.
 This is not as simple as it might seem.
 
 
 Software developers like us are notorious for shipping software deffects with every release of our production code. We may utilize the appropriate design patterns; we may utilize principles such as test-driven development, and we may even integrate rule sets and linting tools to check for certain aspects of code quality. Yet, we are still delivering deffective software to customers. This is because the craft of software development is uncertain and unpredictable, and humankind is fallible.
-Nevertheless, it is necessary to investigate whether computers can do better at finding deffects through predictive modeling and machine learning, since there are legacy code bases to maintain, and we are still far from software that can produce more software.
+Nevertheless, it is necessary to investigate whether computers can do better at finding deffects through predictive modeling and machine learning, since there are legacy code bases to maintain, and we are still far from software that can write new systems or applications.
 The goal is to build a classifier that can tell us whether a code fragment is deffective or not.
 The task of building such a classifier will be carried out as follows:
 
@@ -80,9 +82,9 @@ The task of building such a classifier will be carried out as follows:
 # Current Research{-}
 
 A conference took place in 2018, where papers were presented regarding predictive models for software analytics.
-(See the following page for details: ("A Public Unified Bug Dataset for Java")[https://dl.acm.org/doi/10.1145/3273934.3273936])
+(See the following page for details: ["A Public Unified Bug Dataset for Java"](https://dl.acm.org/doi/10.1145/3273934.3273936))
 This paper from authors who are affiliated with the university of Szeged, Hungary, presents a dataset compiled to aid in the creation of predictive models for software deffects (also known as software bugs). They utilized five datasets that were already available, according to their own research. Furthermore, they downloaded the source code for the datasets they found. They used decision tree algorithms to predict whether a certain Java class was deffective.
-The following link shows the archive for the dataset downloads: (Download Unified Bug Dataset)[http://www.inf.u-szeged.hu/~ferenc/papers/UnifiedBugDataSet/]
+The following link shows the archive for the dataset downloads: [Download Unified Bug Dataset](http://www.inf.u-szeged.hu/~ferenc/papers/UnifiedBugDataSet/)
 (Although the paper for this data repository was presented in 2018, the latest version was published in December of 2019, and it is the latest version that was used to build the classifiers.)
 
 Before continuing with the description and important statistics of the dataset, it is worth mentioning that it does not take into consideration factors such as static versus dynamic typing.
@@ -97,8 +99,8 @@ Note that deffects at the class level were explored; analysis and modeling has y
 
 ## Nesting Levels (NL){-}
 
-```{r echo = FALSE}
-ggplot(bugs_per_nl, aes(bug, NL))+
+```{r echo = FALSE, warning = FALSE}
+ggplot(bugs_per_nl, aes(bug, NL, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Nesting Levels")
 knitr::kable(summary(bugs_per_nl), caption = "Summary of statistics for the number of nesting levels in a Java class.")
@@ -124,7 +126,7 @@ In this case, there are three levels of nesting: the outermost loop, a while loo
 In a real-world scenario, code that is written in that manner is likely to contain deffects. Furthermore, such code fragments can be found deep in systems that have millions of lines of code.
 
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(bugs_per_nl, aes(bug, NL))+
 geom_point()+
 geom_text(aes(label = NL), hjust = 0, vjust = 0)+
@@ -138,8 +140,8 @@ caption = "Data retrieved from the Unified Bug Dataset")
 
 ## Number of Local Methods (NLM){-}
 
-```{r echo = FALSE}
-ggplot(bugs_per_nlm, aes(bug, NLM))+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(bugs_per_nlm, aes(bug, NLM, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Local Methods")
 knitr::kable(summary(bugs_per_nlm), caption = "Summary statistics for the number of methods within a Java class.")
@@ -147,7 +149,7 @@ knitr::kable(summary(bugs_per_nlm), caption = "Summary statistics for the number
 
 Local class methods refer to those that are not inherited from other classes. The more methods found within a class, the more that class will be likely to contain deffects. (Not to mention that if the class contains many methods, it is time for a developer to question the design of such class, and perhaps refactor it into smaller, more managable classes.)
 
-```{r echo = FALSE}
+```{r echo = FALSE, mwssage = FALSE, warning = FALSE}
 ggplot(bugs_per_nlm, aes(bug, NLM))+
 geom_point()+
 geom_text(aes(label = NLM), hjust = 0, vjust = 0)+
@@ -161,8 +163,8 @@ caption = "Data retrieved from the Unified Bug Dataset")
 
 ## Logical Lines of Duplicated Code (LLDC){-}
 
-```{r echo = FALSE}
-ggplot(bugs_per_lldc, aes(bug, LLDC))+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(bugs_per_lldc, aes(bug, LLDC, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Logical Lines of Duplicated Code")
 knitr::kable(summary(bugs_per_lldc), caption = "Summary statistics for the number of logical lines of code.")
@@ -170,7 +172,7 @@ knitr::kable(summary(bugs_per_lldc), caption = "Summary statistics for the numbe
 
 Logical code fragments are those that do not contain comment lines or empty ones. It is a best practice to avoid duplication wherever possible. It is easy to create bugs using duplicated code, thus principles such as inheritance have been added to languages such as Java. (In fact, any signs of code duplication should make software developers question the current design of such code fragments, or the components in which they are found.) It therefore makes sense that this feature correlates with the number of bugs.
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(bugs_per_lldc, aes(bug, LLDC))+
 geom_point()+
 geom_text(aes(label = LLDC), hjust = 0, vjust = 0)+
@@ -186,8 +188,8 @@ It is important to take a moment to notice that correlation does not necessarily
 
 ## Lines of Duplicated Code (LDC){-}
 
-```{r echo = FALSE}
-ggplot(bugs_per_ldc, aes(bug, LDC))+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(bugs_per_ldc, aes(bug, LDC, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Lines of Duplicated Code")
 knitr::kable(summary(bugs_per_ldc), caption = "Summary statistics for the number of duplicated lines of code (including comments).")
@@ -195,7 +197,7 @@ knitr::kable(summary(bugs_per_ldc), caption = "Summary statistics for the number
 
 These include comments and other parts of a physical Java source file, such as API documentation, empty lines for readability, indenting, ETC.
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(bugs_per_ldc, aes(bug, LDC))+
 geom_point()+
 geom_text(aes(label = LDC), hjust = 0, vjust = 0)+
@@ -210,8 +212,8 @@ caption = "Data retrieved from the Unified Bug Dataset")
 ## Number of Local Getters (NLG){-}
 
 
-```{r echo = FALSE}
-ggplot(bugs_per_nlg, aes(bug, NLG))+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(bugs_per_nlg, aes(bug, NLG, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Local Getters")
 knitr::kable(summary(bugs_per_nlg), caption = "Summary statistics for property getters not inherited from other classes.")
@@ -219,7 +221,7 @@ knitr::kable(summary(bugs_per_nlg), caption = "Summary statistics for property g
 
 This is the same scenario as that of the number of local methods. Objects that are not thread-safe, along with setter methods, can contribute to software deffects.
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(bugs_per_nlg, aes(bug, NLG))+
 geom_point()+
 geom_text(aes(label = NLG), hjust = 0, vjust = 0)+
@@ -233,8 +235,8 @@ caption = "Data retrieved from the Unified Bug Dataset")
 
 ## Number of Nesting Levels Including Else-if Constructs (NLE){-}
 
-```{r echo = FALSE}
-ggplot(bugs_per_nle, aes(bug, NLE))+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(bugs_per_nle, aes(bug, NLE, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Nesting Level Else-if")
 knitr::kable(summary(bugs_per_nle), caption = "Summary statistics of the number of nesting levels (including else-if statements) within a Java class.")
@@ -243,7 +245,7 @@ knitr::kable(summary(bugs_per_nle), caption = "Summary statistics of the number 
 It is the same scenario as the first feature.
 Unfortunately, code containing nested blocks is sometimes found in domains such as system software (e.g., the lexical analyzer of the C-Sharp compiler). Nesting code is often preferred over refactoring such fragments into more manageable function or method.
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(bugs_per_nle, aes(bug, NLE))+
 geom_point()+
 geom_text(aes(label = NLE), hjust = 0, vjust = 0)+
@@ -257,8 +259,8 @@ caption = "Data retrieved from the Unified Bug Dataset")
 
 ##  Total Number of Statements (TNOS){-}
 
-```{r echo = FALSE}
-ggplot(bugs_per_tnos, aes(bug, TNOS))+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(bugs_per_tnos, aes(bug, TNOS, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Number of Statements")
 knitr::kable(summary(bugs_per_tnos), caption = "Summary statistics for the total number of statements found in a Java class.")
@@ -266,7 +268,7 @@ knitr::kable(summary(bugs_per_tnos), caption = "Summary statistics for the total
 
 Experience shows that the more complex a function or method becomes, the more difficult it is to maintain and the more error prone it becomes.
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(bugs_per_tnos, aes(bug, TNOS))+
 geom_point()+
 geom_text(aes(label = TNOS), hjust = 0, vjust = 0)+
@@ -280,16 +282,16 @@ caption = "Data retrieved from the Unified Bug Dataset")
 
 ## Total Number of Logical Lines of Code (TLLOC){-}
 
-```{r echo = FALSE}
-ggplot(bugs_per_tlloc, aes(bug, TLLOC))+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(bugs_per_tlloc, aes(bug, TLLOC, group = 1))+
 geom_boxplot()+
 labs(title = "Summary of Software Deffects Versus Total Logical Lines of Code")
 knitr::kable(summary(bugs_per_tnos), caption = "Summary statistics for the total number of logical lines found in a Java class.")
 ```
 
+This feature records how many executable lines of code a particular Java class contains.
 
-
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 ggplot(bugs_per_tlloc, aes(bug, TLLOC))+
 geom_point()+
 geom_text(aes(label = TLLOC), hjust = 0, vjust = 0)+
@@ -306,8 +308,8 @@ caption = "Data retrieved from the Unified Bug Dataset")
 ```{R include = FALSE, cache = TRUE}
 set.seed(123)
 model_glm <- glm(y_train~NL+NLM+LLDC+LDC+NLG+NLE+TNOS+TLLOC, data = x_train, family = "binomial")
-predictions_glm <- predict(model_glm, x_test)
-acc_glm <- mean(predictions_glm == y_test)
+predictions_glm <- predict(model_glm, x_test, type = "response")
+acc_glm <- mean(round(predictions_glm) == y_test)
 auc_glm = auc(y_test, predictions_glm)
 
 data_train <- select(x_train, NL, NLM, LLDC, LDC, NLG, NLE, TNOS, TLLOC)
@@ -319,13 +321,12 @@ test_m <- as.matrix(data_test)
 set.seed(123)
 model_svm <- svm(train_m, y_train)
 predictions_svm <- predict(model_svm, test_m)
-acc_svm <- mean(predictions_svm == y_test)
+acc_svm <- mean(round(predictions_svm) == y_test)
 auc_svm = auc(y_test, predictions_svm)
-
-
 
 set.seed(123)
 model_xgb <- xgboost(data = train_m, label = y_train, max_depth = 8, eta= 0.3, nrounds = 4, objective = "binary:logistic")
+
 predictions_xgb <- predict(model_xgb, test_m)
 acc_xgb <- mean(round(predictions_xgb) == y_test)
 auc_xgb = auc(y_test, predictions_xgb)
@@ -350,8 +351,8 @@ model %>%
 
 # compile model
 model %>%
-  compile(loss = 'binary_crossentropy',
-          optimizer = 'adam',
+  compile(loss='binary_crossentropy',
+          optimizer='adam',
           metrics='accuracy')
 
 # train model
@@ -370,8 +371,10 @@ auc_nn = auc(y_test, predictions_nn[, 2])
 
 
 model_data <- data.frame(Model_name = c("Logistic Regression", "Support Vector Machine", "Extreme Gradient Boosting", "Keras Neural Network"),
-model_acc = c(acc_glm, acc_svm, acc_xgb, acc_nn),
+model_acc = as.numeric(c(acc_glm, acc_svm, acc_xgb, acc_nn)),
 model_auc = c(auc_glm, auc_svm, auc_xgb, auc_nn))
+
+
 ```
 
 The Unified Bug Dataset repository containes `r nrow(unified_class)` observations of Java classes found in five different projects such as the Eclipse family of open source integrated development environments. To train the chosen models, the data was split into $0.7%$ training, and the rest was used for the predictions phase.
@@ -390,9 +393,12 @@ knitr::kable(model_data, col.names=c("Model Name", "Accuracy", "Area Under the C
 # Variable Importance for the Best Model
 
 As one can see from the table above, Extreme Gradient Boost performed the task of classifying Java classes with deffects better than the other models. Now, the question becomes: What features contributed to the performance of the model?
-According to the (documentation for X G Boost)[http://127.0.0.1:15819/library/xgboost/html/xgb.importance.html], the `Gain` metric is interpreted as the percentage contributed to the model (the higher the percentage, the higher the importance of a certain feature.). The feature importance results are shown below:
+According to the [documentation for X G Boost](http://127.0.0.1:15819/library/xgboost/html/xgb.importance.html), the `Gain` metric is interpreted as the percentage contributed to the model (the higher the percentage, the higher the importance of a certain feature.). The feature importance results are shown below:
 
-```{r echo = FALSE}
+```{r echo = FALSE, cache = TRUE}
+# Calcculate the variable importance for XG Boost, as that is the best model.
+important_df_xgb <- data.frame(xgb.importance(model = model_xgb))
+
 knitr::kable(important_df_xgb, caption = "Ranking of features (by Gain metric) according to the extreme gradient boosting model.")
 ```
 
@@ -403,3 +409,4 @@ There were aspects of each Java class that could have been useful for the traini
 # Future Research and Conclusions{-}
 
 Although the dataset contained classes written in Java, this can be extended to languages such as Rust, Go, C++, and others. When that occurrs, refactoring tools can generate warnings regarding the nesting levels of a function, the number of statements in a particular class, reduction of object mutability by removing setter methods (indirect usage of the number of getters feature). Taking into account the many advances in modern development environments and web technologies, this feedback can easily be provided almost immediately.
+

@@ -1,9 +1,15 @@
 
 
+# NOTE:
+# The Unified Bug Dataset must be downloaded from
+# http://www.inf.u-szeged.hu/~ferenc/papers/UnifiedBugDataSet/
+
+
+# The file Unified-class.csv must be in the same directory as this file for this code to run correctly.
+
 # install.packages(c("ggrepel", "viridis"))
 
 library(e1071)
-library(glm)
 library(keras)
 library(pROC)
 library(rsample)
